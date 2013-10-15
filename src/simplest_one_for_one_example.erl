@@ -30,7 +30,7 @@ test() ->
 	Ret3 = supervisor:start_child( ?MODULE, [ fun() -> io:format("F3~n") end ] ),
 	{ [Ret0, Ret1, Ret2, Ret3],  supervisor:which_children( ?MODULE ) }.
 
-start_link() -> simplest_one_for_one:start_link( {local, ?MODULE}, {?MODULE, start_link_srv, []}, [] ).
+start_link() -> simplest_one_for_one:start_link( {local, ?MODULE}, {?MODULE, start_link_srv, []} ).
 
 start_link_srv( F ) -> proc_lib:start_link( ?MODULE, init_srv, [ F ] ).
 init_srv( F ) ->

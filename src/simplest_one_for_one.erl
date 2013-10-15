@@ -19,8 +19,7 @@
 -behaviour (gen_server).
 -export([
 		start_link/1,
-		start_link/2,
-		start_link/3
+		start_link/2
 	]).
 -export([
 		init/1,
@@ -35,28 +34,20 @@
 		mfa :: { Module :: atom(), Function :: atom(), Args :: [term()] }
 	}).
 
+-spec start_link( mfa() ) -> {ok, pid()}.
 start_link( MFA = {M, F, A} )
 	when is_atom( M )
 	andalso is_atom(F)
 	andalso is_list( A )
--> 
-	gen_server:start_link( ?MODULE, #args{ mfa = MFA }, [] ).
+->
+	gen_server:start_link( ?MODULE, #args{ mfa = MFA } ).
 
-start_link( MFA = {M, F, A}, GenServerOpts )
+start_link( RegName, MFA = {M, F, A} )
 	when is_atom( M )
 	andalso is_atom(F)
 	andalso is_list( A )
-	andalso is_list( GenServerOpts )
 ->
-	gen_server:start_link( ?MODULE, #args{ mfa = MFA }, GenServerOpts ).
-
-start_link( RegName, MFA = {M, F, A}, GenServerOpts )
-	when is_atom( M )
-	andalso is_atom(F)
-	andalso is_list( A )
-	andalso is_list( GenServerOpts )
-->
-	gen_server:start_link( RegName, ?MODULE, #args{ mfa = MFA }, GenServerOpts ).
+	gen_server:start_link( RegName, ?MODULE, #args{ mfa = MFA }, [] ).
 
 %%% %%%%%%%%%% %%%
 %%% gen_server %%%
