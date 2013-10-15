@@ -1,0 +1,8 @@
+{application, simplest_one_for_one,
+ [
+  {description, ""},
+  {vsn, "0.0.1"},
+  {registered, []},
+  {applications, []},
+  {env, []}
+ ]}.
