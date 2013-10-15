@@ -67,6 +67,7 @@ init(#args{
 		}}.
 handle_call( {start_child, MoreArgs}, _From, State = #s{} ) -> do_handle_call_start_child( MoreArgs, State );
 handle_call( {terminate_child, Pid}, _From, State = #s{} ) -> do_handle_call_terminate_child( Pid, State );
+handle_call( count_children, _From, State = #s{} ) -> do_handle_call_count_children( State );
 handle_call( which_children, _From, State = #s{} ) -> do_handle_call_which_children( State );
 handle_call(Request, _From, State = #s{}) -> error_logger:warning_report([?MODULE, handle_call, {badarg, Request}]), {reply, {badarg, Request}, State}.
 handle_cast(Request, State = #s{}) -> error_logger:warning_report([?MODULE, handle_cast, {badarg, Request}]), {noreply, State}.
@@ -131,6 +132,16 @@ unregister_child( Pid, State ) ->
 				{junk_in_pd_entry, Junk}, {child, Pid}]),
 			{false, State}
 	end.
+
+-spec do_handle_call_count_children( State :: state() ) -> {reply, [{specs, 1} | {active, non_neg_integer()} | {supervisors, 0} | {workers, non_neg_integer()}], state()}.
+do_handle_call_count_children( State ) ->
+	N = length( [ p || { {child, _}, {?MODULE, true} } <- erlang:get() ] ),
+	{reply, [
+			{specs, 1},
+			{active, N},
+			{supervisors, 0},
+			{workers, N}
+		], State}.
 
 -type which_children() :: [ {undefined, pid(), worker, [ atom() ]} ].
 -spec do_handle_call_which_children( state() ) -> {reply, which_children(), state()}.
