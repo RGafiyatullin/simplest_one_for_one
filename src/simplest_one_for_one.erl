@@ -40,7 +40,7 @@ start_link( MFA = {M, F, A} )
 	andalso is_atom(F)
 	andalso is_list( A )
 ->
-	gen_server:start_link( ?MODULE, #args{ mfa = MFA } ).
+	gen_server:start_link( ?MODULE, #args{ mfa = MFA }, [] ).
 
 start_link( RegName, MFA = {M, F, A} )
 	when is_atom( M )
