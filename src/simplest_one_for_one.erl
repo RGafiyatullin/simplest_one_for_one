@@ -34,7 +34,10 @@
 		mfa :: { Module :: atom(), Function :: atom(), Args :: [term()] }
 	}).
 
--spec start_link( mfa() ) -> {ok, pid()}.
+-type gen_server_start_link_ret() :: {ok, pid()} | {error, term()} | ignore.
+-type gen_server_name() :: {local, atom()} | {global, term()} | {via, atom(), term()}.
+
+-spec start_link( { atom(), atom(), [ term() ] } ) -> gen_server_start_link_ret().
 start_link( MFA = {M, F, A} )
 	when is_atom( M )
 	andalso is_atom(F)
@@ -42,6 +45,7 @@ start_link( MFA = {M, F, A} )
 ->
 	gen_server:start_link( ?MODULE, #args{ mfa = MFA }, [] ).
 
+-spec start_link( gen_server_name(), { atom(), atom(), [ term() ] } ) -> gen_server_start_link_ret().
 start_link( RegName, MFA = {M, F, A} )
 	when is_atom( M )
 	andalso is_atom(F)
@@ -54,7 +58,7 @@ start_link( RegName, MFA = {M, F, A} )
 %%% %%%%%%%%%% %%%
 
 -record(s, {
-		mfa :: mfa()
+		mfa :: { atom(), atom(), [ term() ] }
 	}).
 -type state() :: #s{}.
 
